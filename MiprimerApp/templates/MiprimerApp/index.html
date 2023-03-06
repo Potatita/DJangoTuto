@@ -1,0 +1,13 @@
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <h1>nisan</h1>
+        <li><a href="/admin/MiprimerApp/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>  
+    <li><a href="/admin/MiprimerApp/qquestion/2/">{{ question.question_text }}</a></li>
+{% endif %}
+
