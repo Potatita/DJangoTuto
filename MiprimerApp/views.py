@@ -2,28 +2,27 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import Question, Choice
 from django.urls import reverse
+from django.views import generic
 
 # Create your views here.
 
-def HolaMundo(request):
-    return HttpResponse("Hola Mundo")
+class IndexView(generic.ListView):
+    template_name = 'MiprimerApp/index.html'
+    context_object_name = 'latest_question_list'
 
-def acerca(request):
-    return HttpResponse("<h1> NO mames es acerca de la vaina </h1>")
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Question.objects.order_by('-pub_date')[:5]
 
-def index(request):
-    latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    #latest_question_list = Question.objects.all()
-    context = {
-        'latest_question_list': latest_question_list,
-    }
-    return render(request, 'MiprimerApp/index.html', context)
-    #output = ', '.join([q.question_text for q in latest_question_list])
-    #return HttpResponse(output)
 
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'MiprimerApp/results.html', {'question': question})
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'MiprimerApp/detail.html'
+
+
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'MiprimerApp/results.html'
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
